@@ -9,8 +9,8 @@ enum horizontal {front, back};
 class Leg{
 private:
     Servo upperServo, middleServo, lowerServo;
-    enum vertical v = down;
-    enum horizontal h = back;
+    enum vertical v;
+    enum horizontal h;
 
 public:
     Leg();

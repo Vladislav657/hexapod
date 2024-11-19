@@ -2,6 +2,8 @@
 
 
 Leg::Leg(int upperPin, int middlePin, int lowerPin) {
+    this->h = back;
+    this->v = lower;
     this->upperServo.attach(upperPin);
     this->middleServo.attach(middlePin);
     this->lowerServo.attach(lowerPin);
