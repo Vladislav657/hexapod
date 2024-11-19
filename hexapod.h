@@ -3,9 +3,14 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+enum vertical {upper, lower};
+enum horizontal {front, back};
+
 class Leg{
 private:
     Servo upperServo, middleServo, lowerServo;
+    enum vertical v = down;
+    enum horizontal h = back;
 
 public:
     Leg();
@@ -23,8 +28,6 @@ public:
     void left();
 
     void right();
-
-    void setDefault();
 };
 
 class LegGroup{
@@ -47,8 +50,6 @@ public:
     void left();
 
     void right();
-
-    void setDefault();
 };
 
 class Hexapod{
