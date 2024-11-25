@@ -1,9 +1,12 @@
 #include "hexapod.h"
 
-
-Leg::Leg(int upperPin, int middlePin, int lowerPin) {
+Leg::Leg() {
+    Servo upperServo, middleServo, lowerServo;
     this->h = back;
     this->v = lower;
+}
+
+void Leg::attach(int upperPin, int middlePin, int lowerPin) {
     this->upperServo.attach(upperPin);
     this->middleServo.attach(middlePin);
     this->lowerServo.attach(lowerPin);
@@ -14,9 +17,9 @@ void Leg::up() {
         return;
     this->v = upper;
 
-    this->middleServo.write(125);
+    this->middleServo.write(130);
     this->lowerServo.write(180);
-    delay(500);
+    delay(300);
     this->middleServo.write(90);
 }
 
@@ -25,8 +28,8 @@ void Leg::forward() {
         return;
     this->h = front;
 
-    this->upperServo.write(80);
-    delay(200);
+    this->upperServo.write(60);
+    delay(300);
     this->upperServo.write(90);
 }
 
@@ -36,8 +39,8 @@ void Leg::down() {
     this->v = lower;
 
     this->lowerServo.write(0);
-    this->middleServo.write(65);
-    delay(250);
+    this->middleServo.write(60);
+    delay(300);
     this->middleServo.write(90);
 }
 
@@ -46,9 +49,16 @@ void Leg::backward() {
         return;
     this->h = back;
 
-    this->upperServo.write(100);
-    delay(200);
+    this->upperServo.write(120);
+    delay(300);
     this->upperServo.write(90);
+}
+
+void Leg::stop() {
+    if (this->h == front)
+        this->backward();
+    if (this->v == upper)
+        this->down();
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -83,6 +93,12 @@ void LegGroup::backward() {
     this->backwardLeg.backward();
 }
 
+void LegGroup::stop() {
+    this->forwardLeg.stop();
+    this->middleLeg.stop();
+    this->backwardLeg.stop();
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 Hexapod::Hexapod(LegGroup A, LegGroup B) {
@@ -110,4 +126,9 @@ void Hexapod::moveBackward() {
     this->B.up();
     this->B.backward();
     this->A.forward();
+}
+
+void Hexapod::stop() {
+    this->A.stop();
+    this->B.stop();
 }

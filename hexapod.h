@@ -15,7 +15,7 @@ private:
 public:
     Leg();
 
-    Leg(int upperPin, int middlePin, int lowerPin);
+    void attach(int upperPin, int middlePin, int lowerPin);
 
     void up();
 
@@ -28,6 +28,8 @@ public:
     void left();
 
     void right();
+
+    void stop();
 };
 
 class LegGroup{
@@ -50,6 +52,8 @@ public:
     void left();
 
     void right();
+
+    void stop();
 };
 
 class Hexapod{
@@ -66,4 +70,6 @@ public:
     void moveLeft();
 
     void moveRight();
+
+    void stop();
 };
