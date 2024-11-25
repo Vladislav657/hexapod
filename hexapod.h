@@ -5,17 +5,19 @@
 
 enum vertical {upper, lower};
 enum horizontal {front, back};
+enum type {l, r};
 
 class Leg{
 private:
     Servo upperServo, middleServo, lowerServo;
     enum vertical v;
     enum horizontal h;
+    enum type t;
 
 public:
     Leg();
 
-    void attach(int upperPin, int middlePin, int lowerPin);
+    void attach(int upperPin, int middlePin, int lowerPin, enum type);
 
     void up();
 
@@ -39,7 +41,7 @@ private:
 public:
     LegGroup();
 
-    LegGroup(Leg forwardLeg, Leg middleLeg, Leg backwardLeg);
+    void attach(Leg forwardLeg, Leg middleLeg, Leg backwardLeg);
 
     void up();
 
@@ -61,7 +63,9 @@ private:
     LegGroup A, B;
 
 public:
-    Hexapod(LegGroup A, LegGroup B);
+    Hexapod();
+
+    void attach(LegGroup A, LegGroup B);
 
     void moveForward();
 
