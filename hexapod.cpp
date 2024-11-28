@@ -11,61 +11,50 @@ void Leg::attach(int upperPin, int middlePin, int lowerPin, enum type t) {
     this->t = t;
 }
 
-void Leg::up() {
+void Leg::up(int d, int speed) { // +-30 +- 300
     if (this->v == upper)
         return;
     this->v = upper;
+    speed *= this->isLeft() ? -1 : 1;
 
-    if (this->t == r)
-        this->middleServo.write(130);
-    else
-        this->middleServo.write(50);
-    this->lowerServo.write(160);
-
-    delay(200);
+    this->middleServo.write(90 + speed);
+    delay(d);
     this->middleServo.write(90);
 }
 
-void Leg::forward() {
+void Leg::forward(int d, int speed) {
     if (this->h == front)
         return;
     this->h = front;
+    speed *= this->isLeft() ? 1 : -1;
 
-    if (this->t == r)
-        this->upperServo.write(60);
-    else
-        this->upperServo.write(120);
-
-    delay(200);
+    this->upperServo.write(90 + speed);
+    delay(d);
     this->upperServo.write(90);
 }
 
-void Leg::down() {
+void Leg::down(int d, int speed) {
     if (this->v == lower)
         return;
     this->v = lower;
-
-    this->lowerServo.write(0);
-    if (this->t == r)
-        this->middleServo.write(60);
-    else
-        this->middleServo.write(120);
-
-    delay(200);
+    speed *= this->isLeft() ? 1 : -1;
+//    if (this->t == r) {
+//        this->lowerServo.write(0);
+//    else {
+//        this->lowerServo.write(180);
+    this->middleServo.write(90 + speed);
+    delay(d);
     this->middleServo.write(90);
 }
 
-void Leg::backward() {
+void Leg::backward(int d, int speed) {
     if (this->h == back)
         return;
     this->h = back;
+    speed *= this->isLeft() ? -1 : 1;
 
-    if (this->t == r)
-        this->upperServo.write(120);
-    else
-        this->upperServo.write(60);
-
-    delay(200);
+    this->upperServo.write(90 + speed);
+    delay(d);
     this->upperServo.write(90);
 }
 
@@ -73,6 +62,10 @@ void Leg::stop() {
     this->up();
     this->backward();
     this->down();
+}
+
+bool Leg::isLeft() {
+    return this->t == l;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -86,27 +79,51 @@ void LegGroup::attach(Leg forwardLeg, Leg middleLeg, Leg backwardLeg) {
 }
 
 void LegGroup::up() {
-    this->forwardLeg.up();
-    this->middleLeg.up();
-    this->backwardLeg.up();
+    if (this->forwardLeg.isLeft()) {
+        this->forwardLeg.up();
+        this->middleLeg.up();
+        this->backwardLeg.up();
+    } else {
+        this->forwardLeg.up(400, 35);
+        this->middleLeg.up(200, 30);
+        this->backwardLeg.up();
+    }
 }
 
 void LegGroup::forward() {
-    this->forwardLeg.forward();
-    this->middleLeg.forward();
-    this->backwardLeg.forward();
+    if (this->forwardLeg.isLeft()) {
+        this->forwardLeg.forward(300, 30);
+        this->middleLeg.forward();
+        this->backwardLeg.forward();
+    } else {
+        this->forwardLeg.forward(200, 30);
+        this->middleLeg.forward();
+        this->backwardLeg.forward();
+    }
 }
 
 void LegGroup::down() {
-    this->forwardLeg.down();
-    this->middleLeg.down();
-    this->backwardLeg.down();
+    if (this->forwardLeg.isLeft()) {
+        this->forwardLeg.down(300, 40);
+        this->middleLeg.down();
+        this->backwardLeg.down();
+    } else {
+        this->forwardLeg.down(300, 10);
+        this->middleLeg.down();
+        this->backwardLeg.down();
+    }
 }
 
 void LegGroup::backward() {
-    this->forwardLeg.backward();
-    this->middleLeg.backward();
-    this->backwardLeg.backward();
+    if (this->forwardLeg.isLeft()) {
+        this->forwardLeg.backward(300, 30);
+        this->middleLeg.backward();
+        this->backwardLeg.backward();
+    } else {
+        this->forwardLeg.backward();
+        this->middleLeg.backward();
+        this->backwardLeg.backward();
+    }
 }
 
 void LegGroup::stop() {

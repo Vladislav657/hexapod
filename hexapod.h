@@ -19,19 +19,21 @@ public:
 
     void attach(int upperPin, int middlePin, int lowerPin, enum type);
 
-    void up();
+    void up(int d = 300, int speed = 30);
 
-    void down();
+    void down(int d = 200, int speed = 30);
 
-    void forward();
+    void forward(int d = 200, int speed = 10);
 
-    void backward();
+    void backward(int d = 200, int speed = 10);
 
     void left();
 
     void right();
 
     void stop();
+
+    bool isLeft();
 };
 
 class LegGroup{
