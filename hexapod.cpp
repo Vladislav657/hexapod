@@ -1,17 +1,5 @@
 #include "hexapod.h"
 
-
-int upSpeed[] = {30, 35, 30, 30, 30, 30};
-int downSpeed[] = {40, 10, 30, 30, 30, 30};
-int forwardSpeed[] = {30, 30, 10, 10, 10, 10};
-int backwardSpeed[] = {30, 10, 10, 10, 10, 10};
-
-int upDelay[] = {300, 400, 200, 300, 300, 300};
-int downDelay[] = {300, 300, 200, 200, 200, 200};
-int forwardDelay[] = {300, 200, 200, 200, 200, 200};
-int backwardDelay[] = {300, 200, 200, 200, 200, 200};
-
-
 Leg::Leg() {}
 
 void Leg::attach(int upperPin, int middlePin, int lowerPin, enum type t) {
