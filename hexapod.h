@@ -27,6 +27,12 @@ public:
 
     void backward(int d = 200, int speed = 10);
 
+    void pushForward(int speed = 10);
+
+    void pushBackward(int speed = 10);
+
+    void stopUpperServo();
+
     void left();
 
     void right();
@@ -36,38 +42,15 @@ public:
     bool isLeft();
 };
 
-class LegGroup{
-private:
-    Leg forwardLeg, middleLeg, backwardLeg;
-
-public:
-    LegGroup();
-
-    void attach(Leg forwardLeg, Leg middleLeg, Leg backwardLeg);
-
-    void up();
-
-    void down();
-
-    void forward();
-
-    void backward();
-
-    void left();
-
-    void right();
-
-    void stop();
-};
 
 class Hexapod{
 private:
-    LegGroup A, B;
+    Leg* legs;
 
 public:
     Hexapod();
 
-    void attach(LegGroup A, LegGroup B);
+    void attach(Leg* legs);
 
     void moveForward();
 
