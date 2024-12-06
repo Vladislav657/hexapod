@@ -43,12 +43,12 @@ public:
 };
 
 
-class Hexapod{
+class Module{
 private:
     Leg* legs;
 
 public:
-    Hexapod();
+    Module();
 
     void attach(Leg* legs);
 
