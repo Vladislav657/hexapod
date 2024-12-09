@@ -1,15 +1,15 @@
 #include "hexapod.h"
 #include <Wire.h>
 
-int upSpeed[] = {30, 35, 30, 30, 30, 30};
-int downSpeed[] = {40, 10, 30, 30, 30, 30};
-int forwardSpeed[] = {30, 30, 10, 10, 10, 10};
-int backwardSpeed[] = {30, 10, 10, 10, 10, 10};
+int upSpeed[] = {30, 30, 30, 20, 30, 35};
+int downSpeed[] = {40, 20, 30, 20, 30, 30};
+int forwardSpeed[] = {30, 30, 10, 10, 10, 20};
+int backwardSpeed[] = {30, 40, 10, 10, 10, 35};
 
 int upDelay[] = {300, 400, 200, 300, 300, 300};
-int downDelay[] = {300, 300, 200, 200, 200, 200};
-int forwardDelay[] = {300, 200, 200, 200, 200, 200};
-int backwardDelay[] = {300, 200, 200, 200, 200, 200};
+int downDelay[] = {300, 300, 200, 300, 200, 300};
+int forwardDelay[] = {300, 200, 200, 200, 300, 300};
+int backwardDelay[] = {300, 200, 200, 200, 300, 300};
 
 Leg::Leg() {}
 
@@ -17,6 +17,10 @@ void Leg::attach(int upperPin, int middlePin, int lowerPin, enum type t) {
     this->upperServo.attach(upperPin);
     this->middleServo.attach(middlePin);
     this->lowerServo.attach(lowerPin);
+    if (t == r)
+        this->lowerServo.write(0);
+    else
+        this->lowerServo.write(180);
     this->h = back;
     this->v = lower;
     this->t = t;
@@ -109,14 +113,18 @@ void Module::attach(Leg* legs) {
 }
 
 void Module::moveForward() {
+    int a = 1;
+    if (this->legs[0].isLeft())
+        a--;
+
     for (int i = 0; i < 3; ++i){
-        this->legs[i].up(upDelay[i], upSpeed[i]);
-        this->legs[i].forward(forwardDelay[i], forwardSpeed[i]);
-        this->legs[i].down(downDelay[i], downSpeed[i]);
+        this->legs[i].up(upDelay[2 * i + a], upSpeed[2 * i + a]);
+        this->legs[i].forward(forwardDelay[2 * i + a], forwardSpeed[2 * i + a]);
+        this->legs[i].down(downDelay[2 * i + a], downSpeed[2 * i + a]);
     }
 
     for (int i = 0; i < 3; ++i)
-        this->legs[i].pushBackward(backwardSpeed[i]);
+        this->legs[i].pushBackward(backwardSpeed[2 * i + a]);
 
     delay(200);
 
@@ -125,14 +133,18 @@ void Module::moveForward() {
 }
 
 void Module::moveBackward() {
+    int a = 1;
+    if (this->legs[0].isLeft())
+        a--;
+
     for (int i = 0; i < 3; ++i){
-        this->legs[i].up(upDelay[i], upSpeed[i]);
-        this->legs[i].backward(forwardDelay[i], forwardSpeed[i]);
-        this->legs[i].down(downDelay[i], downSpeed[i]);
+        this->legs[i].up(upDelay[2 * i + a], upSpeed[2 * i + a]);
+        this->legs[i].backward(forwardDelay[2 * i + a], forwardSpeed[2 * i + a]);
+        this->legs[i].down(downDelay[2 * i + a], downSpeed[2 * i + a]);
     }
 
     for (int i = 0; i < 3; ++i)
-        this->legs[i].pushForward(backwardSpeed[i]);
+        this->legs[i].pushForward(backwardSpeed[2 * i + a]);
 
     delay(200);
 
