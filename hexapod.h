@@ -31,11 +31,9 @@ public:
 
     void pushBackward(int speed = 10);
 
+    void pushDown(int speed = 10);
+
     void stopUpperServo();
-
-    void left();
-
-    void right();
 
     void stop();
 
@@ -55,10 +53,6 @@ public:
     void moveForward();
 
     void moveBackward();
-
-    void moveLeft();
-
-    void moveRight();
 
     void stop();
 };
