@@ -17,7 +17,7 @@ private:
 public:
     Leg();
 
-    void attach(int upperPin, int middlePin, int lowerPin, enum type);
+    void attach(int upperPin, int middlePin, int lowerPin, enum type t);
 
     void up(int d = 300, int speed = 30);
 

@@ -1,13 +1,12 @@
 #include "hexapod.h"
-#include <Wire.h>
 
-int upSpeed[] = {25, 30, 20, 20, 35, 35};
-int downSpeed[] = {50, 50, 50, 50, 50, 50};
+int upSpeed[] = {30, 35, 30, 30, 30, 30};
+int downSpeed[] = {30, 30, 30, 30, 30, 25};
 int forwardSpeed[] = {30, 30, 30, 10, 30, 20};
 int backwardSpeed[] = {30, 40, 30, 10, 30, 35};
 
-int upDelay[] = {300, 300, 300, 300, 300, 300};
-int downDelay[] = {300, 300, 250, 300, 200, 300};
+int upDelay[] = {300, 300, 300, 300, 300, 350};
+int downDelay[] = {400, 300, 300, 300, 300, 300};
 int forwardDelay[] = {300, 200, 200, 200, 300, 300};
 int backwardDelay[] = {300, 200, 200, 200, 300, 300};
 
@@ -130,7 +129,7 @@ void Module::moveForward() {
     for (int i = 0; i < 3; ++i)
         this->legs[i].pushBackward(backwardSpeed[2 * i + a]);
 
-    delay(200);
+    delay(300);
 
     for (int i = 0; i < 3; ++i)
         this->legs[i].stopUpperServo();
@@ -153,7 +152,7 @@ void Module::moveBackward() {
     for (int i = 0; i < 3; ++i)
         this->legs[i].pushForward(backwardSpeed[2 * i + a]);
 
-    delay(200);
+    delay(300);
 
     for (int i = 0; i < 3; ++i)
         this->legs[i].stopUpperServo();
