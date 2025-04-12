@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Servo.h>
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
 
 enum vertical {upper, lower};
 enum horizontal {front, back};
@@ -9,15 +10,21 @@ enum type {l, r};
 
 class Leg{
 private:
-    Servo upperServo, middleServo, lowerServo;
     enum vertical v;
     enum horizontal h;
     enum type t;
 
+    Adafruit_PWMServoDriver& pwm;
+
+    // Пины на PCA9685
+    int upperPin;
+    int middlePin;
+    int lowerPin;
+
 public:
     Leg();
 
-    void attach(int upperPin, int middlePin, int lowerPin, enum type t);
+    void attach(Adafruit_PWMServoDriver& driver, int upperPin, int middlePin, int lowerPin, enum type t);
 
     void up(int d = 300, int speed = 30);
 
@@ -41,18 +48,24 @@ public:
 };
 
 
-class Module{
+class Hexapod{
 private:
-    Leg* legs;
+    Adafruit_PWMServoDriver& pwm;
+    Leg legs[50];
+    int count;
 
 public:
-    Module();
+    Hexapod(Adafruit_PWMServoDriver& driver);
 
-    void attach(Leg* legs);
+    void attachLeg(int upperPin, int middlePin, int lowerPin, enum type t);
 
     void moveForward();
 
     void moveBackward();
+
+//    void turnLeft();
+
+//    void turnRight();
 
     void stop();
 };
