@@ -26,19 +26,19 @@ public:
 
     void attach(Adafruit_PWMServoDriver& driver, int upperPin, int middlePin, int lowerPin, enum type t);
 
-    void up(int d = 300, int speed = 30);
+    void up(int duration, int speed);
 
-    void down(int d = 200, int speed = 30);
+    void down(int duration, int speed);
 
-    void forward(int d = 200, int speed = 10);
+    void forward(int duration, int speed);
 
-    void backward(int d = 200, int speed = 10);
+    void backward(int duration, int speed);
 
-    void pushForward(int speed = 10);
+    void pushForward(int speed);
 
-    void pushBackward(int speed = 10);
+    void pushBackward(int speed);
 
-    void pushDown(int speed = 10);
+    void pushDown(int speed);
 
     void stopUpperServo();
 
@@ -59,9 +59,9 @@ public:
 
     void attachLeg(int upperPin, int middlePin, int lowerPin, enum type t);
 
-    void moveForward();
+    void moveForward(int duration, int speed);
 
-    void moveBackward();
+    void moveBackward(int duration, int speed);
 
 //    void turnLeft();
 
