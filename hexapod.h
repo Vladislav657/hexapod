@@ -9,12 +9,12 @@ enum horizontal {front, back};
 enum type {l, r};
 
 class Leg{
-private:
+public:
     enum vertical v;
     enum horizontal h;
     enum type t;
 
-    Adafruit_PWMServoDriver& pwm;
+    Adafruit_PWMServoDriver* pwm;
 
     // Пины на PCA9685
     int upperPin;
@@ -24,7 +24,7 @@ private:
 public:
     Leg();
 
-    void attach(Adafruit_PWMServoDriver& driver, int upperPin, int middlePin, int lowerPin, enum type t);
+    void attach(Adafruit_PWMServoDriver* driver, int upperPin, int middlePin, int lowerPin, enum type t);
 
     void up(int duration, int speed);
 
@@ -50,12 +50,12 @@ public:
 
 class Hexapod{
 private:
-    Adafruit_PWMServoDriver& pwm;
+    Adafruit_PWMServoDriver* pwm;
     Leg legs[50];
     int count;
 
 public:
-    Hexapod(Adafruit_PWMServoDriver& driver);
+    Hexapod(Adafruit_PWMServoDriver* driver);
 
     void attachLeg(int upperPin, int middlePin, int lowerPin, enum type t);
 
