@@ -40,6 +40,8 @@ public:
 
     void pushDown(int speed);
 
+    void pushLowerServo(int speed);
+
     void stopUpperServo();
 
     void stop();
@@ -50,18 +52,18 @@ public:
 
 class Hexapod{
 private:
-    Adafruit_PWMServoDriver* pwm;
+    Adafruit_PWMServoDriver* left, *right;
     Leg legs[50];
     int count;
 
 public:
-    Hexapod(Adafruit_PWMServoDriver* driver);
+    Hexapod(Adafruit_PWMServoDriver* left, Adafruit_PWMServoDriver* right);
 
     void attachLeg(int upperPin, int middlePin, int lowerPin, enum type t);
 
-    void moveForward(int duration, int speed);
+    void moveForward(int duration);
 
-    void moveBackward(int duration, int speed);
+    void moveBackward(int duration);
 
 //    void turnLeft();
 

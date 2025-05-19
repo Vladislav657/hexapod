@@ -1,14 +1,14 @@
 #include "hexapod.h"
 
-//int upSpeed[] = {30, 35, 30, 30, 30, 30};
-//int downSpeed[] = {30, 30, 30, 30, 30, 25};
-//int forwardSpeed[] = {30, 30, 30, 10, 30, 20};
-//int backwardSpeed[] = {30, 40, 30, 10, 30, 35};
-//
-//int upDelay[] = {300, 300, 300, 300, 300, 350};
-//int downDelay[] = {400, 300, 300, 300, 300, 300};
-//int forwardDelay[] = {300, 200, 200, 200, 300, 300};
-//int backwardDelay[] = {300, 200, 200, 200, 300, 300};
+int upSpeed[] = {45, 60, -10, 60, 45, 70};
+int forwardSpeed[] = {50, 40, 30, 30, 60, 60};
+int downSpeed[] = {60, 20, 40, 20, 70, 70};
+int backwardSpeed[] = {50, 40, 35, 30, 60, 50};
+
+int upDelay[] = {500, 400, 200, 400, 300, 400};
+int forwardDelay[] = {500, 400, 150, 400, 400, 400};
+int downDelay[] = {500, 400, 600, 400, 400, 400};
+int backwardDelay[] = {500, 400, 200, 400, 400, 400};
 
 #define SERVOMIN  200 // This is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  400 // This is the 'maximum' pulse length count (out of 4096)
@@ -64,7 +64,7 @@ void Leg::forward(int duration, int speed) {
     if (this->h == front) return;
     this->h = front;
 
-    speed *= (this->isLeft() ? -1 : 1);
+    speed *= (this->isLeft() ? 1 : -1);
 
     this->pwm->setPWM(upperPin, 0, 300 + speed);
     delay(duration);
@@ -75,7 +75,7 @@ void Leg::backward(int duration, int speed) {
     if (this->h == back) return;
     this->h = back;
 
-    speed *= (this->isLeft() ? 1 : -1);
+    speed *= (this->isLeft() ? -1 : 1);
 
     this->pwm->setPWM(upperPin, 0, 300 + speed);
     delay(duration);
@@ -87,7 +87,7 @@ void Leg::pushForward(int speed) {
     if (this->h == front) return;
     this->h = front;
 
-    speed *= (this->isLeft() ? -1 : 1);
+    speed *= (this->isLeft() ? 1 : -1);
 
     this->pwm->setPWM(upperPin, 0, 300 + speed);
 }
@@ -96,7 +96,7 @@ void Leg::pushBackward(int speed) {
     if (this->h == back) return;
     this->h = back;
 
-    speed *= (this->isLeft() ? 1 : -1);
+    speed *= (this->isLeft() ? -1 : 1);
 
     this->pwm->setPWM(upperPin, 0, 300 + speed);
 }
@@ -104,6 +104,10 @@ void Leg::pushBackward(int speed) {
 void Leg::pushDown(int speed) {
     speed *= (this->isLeft() ? -1 : 1);
     this->pwm->setPWM(middlePin, 0, 300 + speed);
+}
+
+void Leg::pushLowerServo(int speed) {
+    this->pwm->setPWM(lowerPin, 0, speed);  // Правая нога
 }
 
 void Leg::stopUpperServo() {
@@ -123,53 +127,66 @@ bool Leg::isLeft() {
 // ---------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------------
 
-Hexapod::Hexapod(Adafruit_PWMServoDriver* driver){
-    this->pwm = driver;
+Hexapod::Hexapod(Adafruit_PWMServoDriver* left, Adafruit_PWMServoDriver* right){
+    this->left = left;
+    this->right = right;
     this->count = 0;
 }
 
 void Hexapod::attachLeg(int upperPin, int middlePin, int lowerPin, enum type t) {
-    this->legs[this->count].attach(this->pwm, upperPin, middlePin, lowerPin, t);
+//    this->legs[this->count] = Leg();
+    this->legs[this->count].attach(t == l ? this->left : this->right, upperPin, middlePin, lowerPin, t);
     this->count++;
 }
 
-void Hexapod::moveForward(int duration, int speed) {
+void Hexapod::moveForward(int duration) {
+//    for (int i = 0; i < this->count; ++i) {
+//        this->legs[i].pushLowerServo(550);
+//    }
+
     for (int i = 0; i < this->count; ++i) {
-        this->legs[i].pushDown(speed);
+        this->legs[i].pushDown(downSpeed[i] + 10);
     }
+    delay(duration);
 
     for (int i = 0; i < this->count; ++i){
-        this->legs[i].up(duration, speed);
-        this->legs[i].forward(duration, speed);
-        this->legs[i].down(duration, speed);
-        this->legs[i].pushDown(speed);
+        this->legs[i].up(upDelay[i], upSpeed[i]);
+        this->legs[i].forward(forwardDelay[i], forwardSpeed[i]);
+        this->legs[i].down(downDelay[i], downSpeed[i]);
+        this->legs[i].pushDown(downSpeed[i] + 10);
     }
 
     for (int i = 0; i < this->count; ++i)
-        this->legs[i].pushBackward(speed);
+        this->legs[i].pushBackward(backwardSpeed[i]);
 
-    delay(duration);
+    delay(400);
 
     for (int i = 0; i < this->count; ++i)
         this->legs[i].stopUpperServo();
 }
 
-void Hexapod::moveBackward(int duration, int speed) {
+void Hexapod::moveBackward(int duration) {
+//    for (int i = 0; i < this->count; ++i) {
+//        this->legs[i].pushLowerServo(600);
+//    }
+
     for (int i = 0; i < this->count; ++i) {
-        this->legs[i].pushDown(speed);
+        this->legs[i].pushDown(downSpeed[i] + 10);
     }
 
+    delay(duration);
+
     for (int i = 0; i < this->count; ++i){
-        this->legs[i].up(duration, speed);
-        this->legs[i].backward(duration, speed);
-        this->legs[i].down(duration, speed);
-        this->legs[i].pushDown(speed);
+        this->legs[i].up(upDelay[i], upSpeed[i]);
+        this->legs[i].backward(backwardDelay[i], backwardSpeed[i]);
+        this->legs[i].down(downDelay[i], downSpeed[i]);
+        this->legs[i].pushDown(downSpeed[i] + 10);
     }
 
     for (int i = 0; i < this->count; ++i)
-        this->legs[i].pushForward(speed);
+        this->legs[i].pushForward(forwardSpeed[i]);
 
-    delay(duration);
+    delay(400);
 
     for (int i = 0; i < this->count; ++i)
         this->legs[i].stopUpperServo();
