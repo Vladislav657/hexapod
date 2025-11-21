@@ -4,45 +4,47 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-enum vertical {upper, lower};
-enum horizontal {front, back};
+//enum vertical {upper, lower};
+//enum horizontal {front, back};
 enum type {l, r};
 
 class Leg{
 public:
-    enum vertical v;
-    enum horizontal h;
+//    enum vertical v;
+//    enum horizontal h;
     enum type t;
 
     Adafruit_PWMServoDriver* pwm;
 
     // Пины на PCA9685
-    int upperPin;
-    int middlePin;
-    int lowerPin;
+    int horizontalPin;
+    int verticalPin;
+//    int lowerPin;
+    int buttonPin;
+    int lastButtonState;
 
 public:
     Leg();
 
-    void attach(Adafruit_PWMServoDriver* driver, int upperPin, int middlePin, int lowerPin, enum type t);
+    void attach(Adafruit_PWMServoDriver* driver, int horizontalPin, int verticalPin, int buttonPin, enum type t);
 
-    void up(int duration, int speed);
+    void up();
 
-    void down(int duration, int speed);
+    void down();
 
-    void forward(int duration, int speed);
+    void forward();
 
-    void backward(int duration, int speed);
+    void backward();
 
-    void pushForward(int speed);
+    void pushForward();
 
-    void pushBackward(int speed);
+    void pushBackward();
 
-    void pushDown(int speed);
+//    void pushDown(int speed);
 
-    void pushLowerServo(int speed);
+//    void pushLowerServo(int speed);
 
-    void stopUpperServo();
+    void stopHorizontal();
 
     void stop();
 
@@ -59,11 +61,11 @@ private:
 public:
     Hexapod(Adafruit_PWMServoDriver* left, Adafruit_PWMServoDriver* right);
 
-    void attachLeg(int upperPin, int middlePin, int lowerPin, enum type t);
+    void attachLeg(int horizontalPin, int verticalPin, enum type t);
 
-    void moveForward(int duration);
+    void moveForward();
 
-    void moveBackward(int duration);
+    void moveBackward();
 
 //    void turnLeft();
 
